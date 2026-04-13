@@ -198,7 +198,8 @@ def load_model_and_config():
             st.write("File size:", os.path.getsize(model_path), "bytes")
         if not os.path.exists(model_path):
             return None, config, False, f"Model file not found at {model_path}"
-        model = load_model(model_path, compile=False)
+        model = tf.keras.models.load_model( model_path, compile=False,
+                                           custom_objects={ "InputLayer": tf.keras.layers.InputLayer } )
         return model, config, True, "Model loaded successfully"
 
     except Exception as e:

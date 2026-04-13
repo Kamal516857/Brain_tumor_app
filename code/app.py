@@ -1,9 +1,9 @@
 import tensorflow as tf
+import streamlit as st
 st.write("TF VERSION:", tf.__version__)
 import os
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
 from keras.models import load_model
-import streamlit as st
 import numpy as np
 from PIL import Image
 import json

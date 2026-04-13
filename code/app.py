@@ -12,132 +12,7 @@ import plotly.express as px
 # ==================== PAGE CONFIG ====================
 st.set_page_config(
     page_title="Brain Tumor Detection",
-    page_icon="🧠",import gradio as gr
-import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-from PIL import Image
-import json
-import plotly.graph_objects as go
-
-# ================= LOAD MODEL =================
-model = load_model("ensemble_model.keras", compile=False)
-
-# ================= LOAD CONFIG =================
-with open("config.json", "r") as f:
-    config = json.load(f)
-
-IMG_SIZE = config.get("img_size", 224)
-CLASS_NAMES = config.get("class_names", ["glioma", "meningioma", "notumor", "pituitary"])
-
-# ================= PREPROCESS =================
-def preprocess(img):
-    img = img.convert("RGB").resize((IMG_SIZE, IMG_SIZE))
-    img = np.array(img) / 255.0
-    return np.expand_dims(img, axis=0)
-
-# ================= PREDICT =================
-def predict(image):
-    img = preprocess(image)
-    preds = model.predict(img, verbose=0)[0]
-
-    idx = int(np.argmax(preds))
-    label = CLASS_NAMES[idx]
-    confidence = float(preds[idx]) * 100
-
-    # -------- Plotly Bar Chart (same as Streamlit) --------
-    bar_fig = go.Figure(data=[
-        go.Bar(
-            x=[c.upper() for c in CLASS_NAMES],
-            y=preds * 100,
-            text=[f"{p*100:.2f}%" for p in preds],
-            textposition="outside"
-        )
-    ])
-    bar_fig.update_layout(
-        title="Confidence Scores by Class",
-        yaxis_title="Confidence (%)"
-    )
-
-    # -------- Pie Chart --------
-    pie_fig = go.Figure(data=[
-        go.Pie(
-            labels=[c.upper() for c in CLASS_NAMES],
-            values=preds * 100,
-            hole=0.4
-        )
-    ])
-    pie_fig.update_layout(title="Probability Distribution")
-
-    # -------- Interpretation --------
-    info = {
-        "glioma": "Glioma tumor detected in brain tissue.",
-        "meningioma": "Meningioma likely (usually benign).",
-        "pituitary": "Pituitary tumor detected.",
-        "notumor": "No tumor detected. Brain scan appears normal."
-    }
-
-    return (
-        f"""
-🧠 Brain Tumor Detection Result
-
-🎯 Prediction: {label.upper()}
-📊 Confidence: {confidence:.2f}%
-
-🧾 Interpretation:
-{info.get(label.lower(), "Analysis complete.")}
-""",
-        bar_fig,
-        pie_fig,
-        label,
-        f"{confidence:.2f}%"
-    )
-
-# ================= CUSTOM CSS (MATCH STREAMLIT LOOK) =================
-css = """
-body {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-}
-.gradio-container {
-    font-family: Arial !important;
-}
-h1 {
-    text-align: center;
-    color: white !important;
-}
-"""
-
-# ================= UI =================
-with gr.Blocks(css=css) as app:
-
-    gr.Markdown("# 🧠 Brain Tumor Detection System")
-    gr.Markdown("CNN + MobileNet Ensemble Learning Model")
-
-    with gr.Row():
-
-        with gr.Column(scale=1):
-            gr.Markdown("### 📤 Upload MRI Scan")
-            image_input = gr.Image(type="pil")
-
-            btn = gr.Button("🔍 Analyze Image")
-
-        with gr.Column(scale=1):
-            gr.Markdown("### 📊 Results")
-            output_text = gr.Textbox(label="Diagnosis")
-            label_out = gr.Textbox(label="Predicted Class")
-            conf_out = gr.Textbox(label="Confidence")
-
-    with gr.Row():
-        bar = gr.Plot()
-        pie = gr.Plot()
-
-    btn.click(
-        predict,
-        inputs=image_input,
-        outputs=[output_text, bar, pie, label_out, conf_out]
-    )
-
-app.launch()
+    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -313,7 +188,7 @@ def load_model_and_config():
             config = json.load(f)
 
         # ---------------- MODEL ----------------
-        model_path = os.path.join(BASE_DIR, 'ensemble_model.keras')
+        model_path = os.path.join(BASE_DIR, 'ensemble_model.h5')
 
         if not os.path.exists(model_path):
             return None, config, False, f"Model file not found at {model_path}"
@@ -375,7 +250,7 @@ def main():
     # Check if model is loaded
     if not model_loaded:
         st.error(f"❌ {status_msg}")
-        st.info("Make sure ensemble_model.keras and config.json are in the same directory as this app.")
+        st.info("Make sure ensemble_model.h5 and config.json are in the same directory as this app.")
         return
     
     # Success message

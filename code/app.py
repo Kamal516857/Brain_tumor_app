@@ -1,10 +1,11 @@
 import streamlit as st
 import numpy as np
 from PIL import Image
+import os
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import json
-import os
 from datetime import datetime
 import plotly.graph_objects as go
 import plotly.express as px

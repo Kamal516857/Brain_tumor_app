@@ -1,7 +1,7 @@
+import tensorflow as tf
+st.write("TF VERSION:", tf.__version__)
 import os
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
-
-import tensorflow as tf
 from keras.models import load_model
 import streamlit as st
 import numpy as np

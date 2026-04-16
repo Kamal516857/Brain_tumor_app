@@ -7,7 +7,7 @@ A deep learning-based web application for detecting brain tumors from MRI images
 ## 🚀 Live Demo
 
 🔗 **View the App:**
-👉 (https://brain-tumor-detection-app1.streamlit.app/)
+👉 https://brain-tumor-detection-app1.streamlit.app/
 
 ---
 

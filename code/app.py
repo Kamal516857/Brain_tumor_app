@@ -178,7 +178,7 @@ def load_model_and_config():
     """Load pre-trained model and configuration"""
     try:
         # Try loading config
-        config_path = 'config.json'
+        config_path = 'code/config.json'
         if not os.path.exists(config_path):
             config_path = 'code/config.json'
         
@@ -189,9 +189,9 @@ def load_model_and_config():
             config = json.load(f)
         
         # Try loading model
-        model_path = 'ensemble_model.keras'
+        model_path = 'ensemble_model_fixed.h5'
         if not os.path.exists(model_path):
-            model_path = 'code/ensemble_model.keras'
+            model_path = 'code/ensemble_model_fixed.h5'
         
         if not os.path.exists(model_path):
             return None, config, False, "Model file not found"

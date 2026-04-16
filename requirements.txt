@@ -1,9 +1,8 @@
 streamlit
-tensorflow
+tensorflow-cpu==2.12.0
 numpy
 Pillow
 plotly
 scikit-learn
-opencv-python
+opencv-python-headless
 requests
-
